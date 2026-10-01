@@ -16,7 +16,10 @@ $requiredMarkers = @(
   'class="section mockups"',
   'assets/mockup-collection.png',
   'assets/mockup-tools.png',
-  'sacred-ornament'
+  'sacred-ornament',
+  'hero-product-proof',
+  'assets/hero-complete-collection.png',
+  '12 encontros + 4 volumes<br>+ kit de bônus'
 )
 
 foreach ($marker in $requiredMarkers) {
@@ -25,7 +28,7 @@ foreach ($marker in $requiredMarkers) {
   }
 }
 
-$assets = @('maria-hero.png', 'maria-offer.png', 'product-manual.png', 'product-collection.png', 'product-tools.png', 'mockup-collection.png', 'mockup-tools.png')
+$assets = @('maria-hero.png', 'maria-offer.png', 'product-manual.png', 'product-collection.png', 'product-tools.png', 'mockup-collection.png', 'mockup-tools.png', 'hero-complete-collection.png')
 foreach ($asset in $assets) {
   $assetPath = Join-Path $siteRoot "dist\assets\$asset"
   if (-not (Test-Path -LiteralPath $assetPath)) {
