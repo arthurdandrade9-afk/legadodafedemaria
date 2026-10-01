@@ -6,6 +6,7 @@ $vitrinePath = Join-Path $siteRoot 'dist\vitrine.html'
 if (Test-Path -LiteralPath $vitrinePath) {
   $html += Get-Content -Raw -LiteralPath $vitrinePath
 }
+$vitrineScript = Get-Content -Raw -LiteralPath (Join-Path $siteRoot 'dist\assets\vitrine.js')
 
 $requiredMarkers = @(
   'class="hero santuario"',
@@ -25,9 +26,9 @@ $requiredMarkers = @(
   'assets/hero-complete-collection.png',
   'class="section demonstracao"',
   'Veja por dentro do Legado de Fé com Maria',
-  'assets/preview-manual-inside.png',
-  'assets/preview-caminhos-inside.png',
-  'Cada título vai além do nome',
+  'assets/previews/manual-04-encontro.jpg',
+  'assets/previews/volume-4-02-interno.jpg',
+  'Cada título ganha rosto e significado.',
   '12 entregáveis + 1 edição reunida',
   'Mais de 300 páginas de conteúdo',
   '51 páginas no manual principal',
@@ -49,6 +50,15 @@ $requiredMarkers = @(
   'data-deliverable="catalogo"',
   'data-deliverable="nomes-de-maria"',
   'id="preview-dialog"'
+  'assets/vitrine.js?v=2'
+  'assets/vitrine.css?v=2'
+  'id="como-usar"'
+  'Como transformar o material em um encontro de fé'
+  'data-use-step="1"'
+  'data-use-step="2"'
+  'data-use-step="3"'
+  'data-use-step="4"'
+  'data-use-step="5"'
 )
 
 foreach ($marker in $requiredMarkers) {
@@ -84,6 +94,26 @@ foreach ($match in $imageMatches) {
 
 if ($html.Contains('12 encontros + 4 volumes<br>+ kit de bônus')) {
   throw 'A promessa genérica antiga ainda está no hero.'
+}
+
+$marianPreviewCount = ([regex]::Matches($html, 'data-marian-preview')).Count
+if ($marianPreviewCount -ne 2) {
+  throw "A apresentação principal deve conter exatamente duas páginas marianas; encontradas: $marianPreviewCount"
+}
+
+$presentationStart = $html.IndexOf('id="por-dentro"')
+$mechanismStart = $html.IndexOf('id="como-usar"')
+$introStart = $html.IndexOf('class="section intro"')
+if ($presentationStart -lt 0 -or $mechanismStart -le $presentationStart -or $introStart -le $mechanismStart) {
+  throw 'O mecanismo de uso precisa aparecer imediatamente após a apresentação principal.'
+}
+
+if ($html.Contains('assets/preview-manual-inside.png')) {
+  throw 'A apresentação principal ainda usa uma página sem imagem de Maria.'
+}
+
+if (-not $vitrineScript.Contains("document.querySelector('#como-usar')")) {
+  throw 'A vitrine completa precisa entrar depois do mecanismo de uso, sem separar o passo a passo da apresentação.'
 }
 
 Write-Output 'PASS: contrato Santuário em Casa atendido.'

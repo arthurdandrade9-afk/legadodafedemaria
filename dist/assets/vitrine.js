@@ -1,6 +1,6 @@
 (async function () {
   const mount = document.querySelector('#vitrine-mount');
-  const anchor = document.querySelector('#por-dentro');
+  const anchor = document.querySelector('#como-usar');
   if (!mount) return;
   if (anchor) anchor.after(mount);
 
